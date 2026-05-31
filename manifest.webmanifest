@@ -1,0 +1,19 @@
+{
+  "name": "Reference",
+  "short_name": "Ref",
+  "description": "Reference viewer.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8f7f0",
+  "theme_color": "#102f2e",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
