@@ -306,60 +306,6 @@
       text-decoration: line-through;
     }
 
-    .tabbar {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin: 14px 0 12px;
-    }
-
-    .tab.active {
-      color: #fff;
-      background: var(--deep);
-      border-color: var(--deep);
-    }
-
-    .list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .mini {
-      padding: 13px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      box-shadow: var(--shadow);
-    }
-
-    .mini strong {
-      display: block;
-      font-size: 16px;
-      margin-bottom: 5px;
-    }
-
-    .mini span {
-      display: block;
-      color: var(--muted);
-      font-size: 14px;
-      white-space: pre-line;
-    }
-
-    .mini p {
-      margin-top: 8px;
-      font-size: 15px;
-    }
-
-    .open-item {
-      background: var(--red2);
-      border-color: #e6b5af;
-    }
-
-    .fixed {
-      background: var(--green2);
-      border-color: #b9d6b4;
-    }
-
     .bottom {
       position: sticky;
       bottom: 0;
@@ -464,15 +410,6 @@
         <section class="section"><h3>Checklist</h3><div class="checks" id="checks"></div></section>
       </article>
 
-      <div class="tabbar">
-        <button class="tab active" data-panel="open" type="button">Open</button>
-        <button class="tab" data-panel="items" type="button">Items</button>
-        <button class="tab" data-panel="files" type="button">Refs</button>
-      </div>
-      <section class="list" id="panel-open"></section>
-      <section class="list" id="panel-items" hidden></section>
-      <section class="list" id="panel-files" hidden></section>
-
       <div class="bottom">
         <button class="secondary" id="prevBottom" type="button">Previous</button>
         <button class="primary" id="nextBottom" type="button">Next day</button>
@@ -518,9 +455,6 @@
     }
 
     let days = [];
-    let openItems = [];
-    let items = [];
-    let files = [];
     let sheetText = {};
     let current = 0;
     let els;
@@ -557,10 +491,7 @@
         info: document.getElementById("info"),
         food: document.getElementById("food"),
         links: document.getElementById("links"),
-        checks: document.getElementById("checks"),
-        open: document.getElementById("panel-open"),
-        items: document.getElementById("panel-items"),
-        files: document.getElementById("panel-files")
+        checks: document.getElementById("checks")
       };
     }
     function setup() {
@@ -568,22 +499,11 @@
       els.select.innerHTML = days.map((d, i) => '<option value="' + i + '">' + nice(d[0]) + ' ' + d[1] + ' - ' + d[2] + '</option>').join("");
       els.strip.innerHTML = days.map((d, i) => '<button class="chip" type="button" data-index="' + i + '">' + nice(d[0]).replace(" ", "<br>") + '</button>').join("");
       els.strip.querySelectorAll("button").forEach(b => b.addEventListener("click", () => setDay(Number(b.dataset.index))));
-      els.open.innerHTML = openItems.map(([a,b]) => '<article class="mini open-item"><strong>' + a + '</strong><span>' + b + '</span></article>').join("");
-      els.items.innerHTML = items.map(([dates,place,note]) => '<article class="mini"><strong>' + dates + ' - ' + place + '</strong><span>' + note + '</span></article>').join("");
-      els.files.innerHTML = files.map(([a,b]) => '<article class="mini fixed"><strong>' + a + '</strong><span>' + b + '</span></article>').join("");
       els.select.addEventListener("change", e => setDay(Number(e.target.value)));
       els.prev.addEventListener("click", () => setDay(current - 1));
       els.next.addEventListener("click", () => setDay(current + 1));
       els.prevBottom.addEventListener("click", () => setDay(current - 1));
       els.nextBottom.addEventListener("click", () => setDay(current + 1));
-      document.querySelectorAll(".tab").forEach(tab => {
-        tab.addEventListener("click", () => {
-          document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t === tab));
-          ["open","items","files"].forEach(name => {
-            document.getElementById("panel-" + name).hidden = tab.dataset.panel !== name;
-          });
-        });
-      });
     }
     function setDay(i) {
       current = Math.max(0, Math.min(days.length - 1, i));
@@ -636,9 +556,6 @@
       try {
         const data = await openBundle(value);
         days = data.days;
-        openItems = data.openItems;
-        items = data.items;
-        files = data.files;
         sheetText = data.sheetText || {};
         document.getElementById("unlock").hidden = true;
         document.getElementById("app").hidden = false;
