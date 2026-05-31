@@ -422,13 +422,13 @@
 </head>
 <body>
   <section class="unlock" id="unlock">
-    <div class="unlock-card">
+    <form class="unlock-card" id="unlockForm">
       <h1>Reference</h1>
       <p>Enter value to continue.</p>
-      <input class="refcode" id="refcode" type="text" inputmode="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Value">
-      <button class="primary" id="unlockBtn" type="button">Continue</button>
+      <input class="refcode" id="refcode" name="password" type="password" autocomplete="current-password" autocapitalize="none" spellcheck="false" placeholder="Value">
+      <button class="primary" id="unlockBtn" type="submit">Continue</button>
       <div class="error" id="error"></div>
-    </div>
+    </form>
   </section>
 
   <div class="app" id="app" hidden>
@@ -649,9 +649,9 @@
         error.textContent = "Could not open these notes.";
       }
     }
-    document.getElementById("unlockBtn").addEventListener("click", unlock);
-    document.getElementById("refcode").addEventListener("keydown", (event) => {
-      if (event.key === "Enter") unlock();
+    document.getElementById("unlockForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      unlock();
     });
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
